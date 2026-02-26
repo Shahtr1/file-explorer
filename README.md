@@ -1,6 +1,6 @@
 # @shahrukh404/file-explorer
 
-A lightweight TypeScript utility package for file-explorer style tree structures.
+Framework-agnostic TypeScript utilities for file-explorer style apps.
 
 ## Install
 
@@ -11,25 +11,32 @@ npm install @shahrukh404/file-explorer
 ## Usage
 
 ```ts
-import { flattenPaths, type ExplorerNode } from "@shahrukh404/file-explorer";
+import {
+  filterResourcesByQuery,
+  getFolderPathFromPathname,
+  getTrashResourcesAtVirtualPath,
+  type ExplorerResource,
+} from '@shahrukh404/file-explorer';
 
-const tree: ExplorerNode[] = [
-  {
-    name: "src",
-    path: "src",
-    isDirectory: true,
-    children: [{ name: "index.ts", path: "src/index.ts", isDirectory: false }],
-  },
+const resources: ExplorerResource[] = [
+  { name: 'docs', path: 'my-files/docs', type: 'folder' },
+  { name: 'notes.txt', path: 'my-files/notes.txt', type: 'file' },
 ];
 
-const paths = flattenPaths(tree);
-// ["src", "src/index.ts"]
+const filtered = filterResourcesByQuery(resources, 'docs');
+const route = getFolderPathFromPathname('/reading/my-files/docs');
+const trash = getTrashResourcesAtVirtualPath(resources, 'trash');
 ```
 
 ## API
 
-- `ExplorerNode`: tree node type.
-- `flattenPaths(nodes)`: returns depth-first flattened paths.
+- `flattenPaths(nodes)`
+- `getFolderPathFromPathname(pathname)`
+- `buildChildFolderPath(currentFolderPath, childFolderName)`
+- `filterResourcesByQuery(resources, query)`
+- `isHiddenLostAndFound(resource)`
+- `mapTrashItemsToVirtualPaths(allTrashItems)`
+- `getTrashResourcesAtVirtualPath(allTrashItems, virtualPath, originalPath)`
 
 ## License
 
