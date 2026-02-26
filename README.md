@@ -1,17 +1,17 @@
-# @shahrukh/file-explorer
+# @shahrukh404/file-explorer
 
 A lightweight TypeScript utility package for file-explorer style tree structures.
 
 ## Install
 
 ```bash
-npm install @shahrukh/file-explorer
+npm install @shahrukh404/file-explorer
 ```
 
 ## Usage
 
 ```ts
-import { flattenPaths, type ExplorerNode } from "@shahrukh/file-explorer";
+import { flattenPaths, type ExplorerNode } from "@shahrukh404/file-explorer";
 
 const tree: ExplorerNode[] = [
   {
