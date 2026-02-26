@@ -18,6 +18,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "test": "vitest run",
+    "demo": "npm run build && node examples/basic.mjs",
     "prepublishOnly": "npm run build && npm test"
   },
   "devDependencies": {

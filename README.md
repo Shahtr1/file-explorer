@@ -28,6 +28,28 @@ const route = getFolderPathFromPathname('/reading/my-files/docs');
 const trash = getTrashResourcesAtVirtualPath(resources, 'trash');
 ```
 
+## Quick Demo
+
+Run a real example with sample resources and trash items:
+
+```bash
+npm run demo
+```
+
+Expected output (similar):
+
+```txt
+Search result names: [ 'docs', 'project-plan.md' ]
+Route parse: { isTrashView: false, baseSegment: 'my-files', folderPath: 'my-files/docs' }
+Virtual root: trash/project-a
+Mapped trash paths: [
+  'project-a -> trash/project-a',
+  'readme.md -> trash/project-a/readme.md',
+  'orphan.txt -> trash/orphan.txt'
+]
+trash/project-a children: [ 'readme.md' ]
+```
+
 ## API
 
 - `flattenPaths(nodes)`
