@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildChildFolderPath,
+  copyResourceInTree,
   filterResourcesByQuery,
   flattenPaths,
   getFolderPathFromPathname,
   getTrashResourcesAtVirtualPath,
   isHiddenLostAndFound,
   mapTrashItemsToVirtualPaths,
+  moveResourceInTree,
+  renameResourceInTree,
   type ExplorerNode,
   type ExplorerResource,
 } from './index';
@@ -98,6 +101,76 @@ describe('isHiddenLostAndFound', () => {
         empty: true,
       })
     ).toBe(true);
+  });
+});
+
+describe('rename/move/copy tree operations', () => {
+  const tree: ExplorerResource[] = [
+    { name: 'my-files', path: 'my-files', type: 'folder' },
+    { name: 'docs', path: 'my-files/docs', type: 'folder' },
+    {
+      name: 'project-a',
+      path: 'my-files/docs/project-a',
+      type: 'folder',
+    },
+    {
+      name: 'readme.md',
+      path: 'my-files/docs/project-a/readme.md',
+      type: 'file',
+    },
+    { name: 'archive', path: 'my-files/archive', type: 'folder' },
+  ];
+
+  it('renames a folder and updates descendant paths', () => {
+    const renamed = renameResourceInTree(
+      tree,
+      'my-files/docs/project-a',
+      'project-z'
+    );
+
+    expect(renamed.find((r) => r.name === 'project-z')?.path).toBe(
+      'my-files/docs/project-z'
+    );
+    expect(
+      renamed.find((r) => r.name === 'readme.md' && r.type === 'file')?.path
+    ).toBe('my-files/docs/project-z/readme.md');
+  });
+
+  it('moves a folder and updates descendant paths', () => {
+    const moved = moveResourceInTree(
+      tree,
+      'my-files/docs/project-a',
+      'my-files/archive'
+    );
+
+    expect(
+      moved.find((r) => r.path === 'my-files/archive/project-a')?.name
+    ).toBe('project-a');
+    expect(
+      moved.find((r) => r.name === 'readme.md' && r.type === 'file')?.path
+    ).toBe('my-files/archive/project-a/readme.md');
+  });
+
+  it('prevents moving folder into itself/descendant', () => {
+    expect(() =>
+      moveResourceInTree(tree, 'my-files/docs', 'my-files/docs/project-a')
+    ).toThrow('Cannot move a folder into itself or its descendant');
+  });
+
+  it('copies a folder subtree with automatic copy naming', () => {
+    const copied = copyResourceInTree(
+      tree,
+      'my-files/docs/project-a',
+      'my-files/archive'
+    );
+
+    expect(
+      copied.find((r) => r.path === 'my-files/archive/project-a copy')?.type
+    ).toBe('folder');
+    expect(
+      copied.find((r) => r.path === 'my-files/archive/project-a copy/readme.md')
+        ?.type
+    ).toBe('file');
   });
 });
 
